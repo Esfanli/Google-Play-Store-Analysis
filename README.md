@@ -3,49 +3,44 @@
 **Author:** [ESfanli] | **GitHub:** [@Esfanli](https://github.com/Esfanli)
 
 ---
+این پروژه شامل فرآیند پاکسازی، پیش‌پردازش و تحلیل اکتشافی داده‌ها (EDA) بر روی مجموعه داده‌های اپلیکیشن‌های Google Play است. هدف از این پروژه، بررسی الگوهای موجود در امتیازات، دسته‌بندی‌ها، قیمت‌گذاری و ارتباط بین تعداد نظرات و امتیاز کاربران است.
 
-This project performs an in-depth Exploratory Data Analysis (EDA) on the Google Play Store dataset. The goal is to clean, process, and visualize the data to uncover patterns in app ratings, popular categories, pricing strategies, and user engagement.
+## 🛠 کتابخانه‌های استفاده شده
+* **پردازش و تحلیل داده:** `pandas`, `numpy`
+* **مصورسازی داده:** `matplotlib`, `seaborn`
+* **پردازش متن:** `re`
 
-## 🛠 Tech Stack & Libraries
-* **Language:** Python
-* **Data Manipulation:** `pandas`, `numpy`
-* **Data Visualization:** `matplotlib`, `seaborn`
-* **Text Processing:** `re` (Regular Expressions)
+## 📂 ساختار دیتاست (googleplaystore.csv)
+دیتاست استفاده شده شامل ۱۳ ستون اصلی زیر است:
+* `App`: نام برنامه
+* `Category`: دسته‌بندی برنامه (مانند ART_AND_DESIGN, AUTO_AND_VEHICLES, BEAUTY و ...)
+* `Rating`: امتیاز برنامه
+* `Reviews`: تعداد نظرات
+* `Size`: حجم برنامه
+* `Installs`: تعداد نصب
+* `Type`: نوع برنامه (Free یا Paid)
+* `Price`: قیمت برنامه
+* `Content Rating`: رده‌بندی سنی محتوا
+* `Genres`: ژانر برنامه
+* `Last Updated`: تاریخ آخرین به‌روزرسانی
+* `Current Ver`: نسخه فعلی
+* `Android Ver`: نسخه اندروید مورد نیاز
 
-## 📂 Dataset Overview
-The dataset (`googleplaystore.csv`) contains information on 10,840 applications across 13 columns, including:
-* `App`: Application name
-* `Category`: App category
-* `Rating`: User rating
-* `Reviews`: Number of user reviews
-* `Size`: App size
-* `Installs`: Number of installs
-* `Type`: Free or Paid
-* `Price`: App price
-* `Content Rating`: Age rating
-* `Genres`: App genres
-* `Last Updated`, `Current Ver`, `Android Ver`: Metadata
+## ⚙️ مراحل پیش‌پردازش و پاکسازی داده‌ها
+1. **بارگذاری داده‌ها:** خواندن فایل CSV با استفاده از `pandas`.
+2. **حذف داده‌های نادرست:** حذف رکورد مربوط به اپلیکیشن `'Life Made WI-Fi Touchscreen Photo Frame'` به دلیل وجود داده‌های نامعتبر.
+3. **بررسی ساختار داده‌ها:** استفاده از متدهای `info()` و `describe()` برای شناسایی مقادیر گم‌شده (مانند ستون‌های Rating، Type و ...) و بررسی توزیع آماری.
+4. **تبدیل نوع داده‌ها (Data Type Conversion):**
+   * تبدیل ستون `Reviews` از رشته به عدد (`int64`).
+   * تبدیل ستون `Size` به عدد اعشاری (`float64`) پس از حذف حروف (مانند M و k).
+   * تبدیل ستون `Installs` به عدد صحیح (`int64`) پس از حذف کاراکترهای اضافی (مانند + و ,).
+   * تبدیل ستون `Price` به عدد اعشاری (`float64`) پس از حذف علامت دلار.
+   * ایجاد ستون `Main_Genre` با استخراج ژانر اصلی از ستون `Genres`.
 
-## ⚙️ Data Preprocessing
-Before visualization, the raw data underwent several cleaning steps:
-1. **Data Cleaning:** Removed invalid records (e.g., the `'Life Made WI-FI Touchscreen Photo Frame'` anomaly) and reset the index.
-2. **Handling Missing Values & Data Types:** Analyzed missing values (e.g., 9,659 null values in the `Rating` column) using `df.info()` and `df.describe()`.
-3. **Type Conversion (Casting):**
-   * Converted `Reviews` from string to `int64`.
-   * Cleaned and converted `Size` to `float64` (handling 'M' and 'k' suffixes).
-   * Removed special characters (+, ,) to convert `Installs` to `int64`.
-   * Removed the '$' sign to convert `Price` to `float64`.
-   * Extracted a new `Main_Genre` column from the `Genres` column.
+## 📊 مصورسازی و تحلیل اکتشافی (EDA)
+در این پروژه ۴ نمودار اصلی برای درک بهتر داده‌ها رسم شده است:
 
-## 📊 Visualizations & Insights
-The notebook includes four main visualizations:
-
-1. **Rating Distribution:** A histogram with a KDE curve showing that the majority of apps are rated between **4.0 and 4.5**.
-2. **Top 10 Categories:** A bar chart revealing that categories like **FAMILY**, **GAME**, and **TOOLS** have the highest number of applications.
-3. **Free vs. Paid Apps Rating Comparison:** A boxplot showing that while the median rating for both groups is similar, paid apps have more low-rating outliers.
-4. **Reviews vs. Rating Relationship:** A scatter plot with a logarithmic X-axis demonstrating that apps with a massive number of reviews (100k+) tend to have highly concentrated, high ratings.
-
-## 🚀 How to Run
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Esfanli/Google-Play-Store-Analysis.git
+1. **توزیع امتیازها (Rating Distribution):** استفاده از هیستوگرام (`histplot`) با ۲۰ بین (bin) و نمایش منحنی چگالی (KDE) برای بررسی نحوه پراکندگی امتیازات. (بیشتر امتیازات بین ۴.۰ تا ۴.۵ متمرکز هستند).
+2. **دسته‌بندی‌های پرطرفدار (Top Categories):** رسم نمودار میله‌ای (`bar`) برای نمایش ۲۰ دسته‌بندی پرتکرار. (دسته‌هایی مانند FAMILY، GAME و TOOLS بیشترین تعداد اپلیکیشن را دارند).
+3. **مقایسه امتیاز اپلیکیشن‌های رایگان و پولی:** استفاده از نمودار جعبه‌ای (`boxplot`) برای مقایسه توزیع امتیازات (`Rating`) بین دو گروه `Free` و `Paid`. (نشان می‌دهد که توزیع امتیازات در هر دو گروه نسبتاً مشابه است، اما اپلیکیشن‌های پولی دارای داده‌های پرت (Outliers) بیشتری در امتیازات پایین هستند).
+4. **رابطه تعداد نظرات و امتیاز:** رسم نمودار پراکندگی (`scatterplot`) بین `Reviews` و `Rating` با استفاده از مقیاس لگاریتمی (`plt.xscale('log')`) روی یک نمونه تصادفی از ۲۰۰۰ رکورد. (این نمودار نشان می‌دهد که اپلیکیشن‌های با نظرات بسیار بالا معمولاً امتیازات بالایی دارند، اما پراکندگی زیادی در امتیازات پایین‌تر وجود دارد)
